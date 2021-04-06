@@ -6,6 +6,7 @@ class Song(models.Model):
     audio = models.FileField(upload_to='audios')
     pic = models.ImageField(upload_to='pics')
 
-#    def __str__(self):
-#        return self.name
+    def __str__(self):
+        return self.name
+
 
