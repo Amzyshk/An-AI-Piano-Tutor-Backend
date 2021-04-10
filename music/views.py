@@ -22,8 +22,20 @@ def upload(request):
         # Store the uploaded recording at /media/audios
         handle_recording(request.FILES['recording'])
         # TODO: Please process the recording here and return in the following format:
-        # TODO: an array of the index of the error notes
-        # TODO: Please remember to delete that recording file after processing.
-        response = JsonResponse([3, 4], safe=False)
+        # TODO: an array of 0 or 1, where 0 indicates the note is correct, 1 indicates it has wrong frequency,
+        # TODO: 2 indicates it's omitted, 3 indicates 多弹, 4 indicates it has wrong rhythm
+        # TODO: the length of the array should be the total number of notes in the piece, 62 for Ode to Joy.
+        data = []
+        for i in range(62):
+            if i == 2:
+                data.append(2)
+            elif i == 5:
+                data.append(3)
+            elif i == 10:
+                data.append(4)
+            else:
+                data.append(1)
+        res = {'bpm': 120, 'speed': 80, 'note': 0.9, 'rhythm': 0.7, 'correctness': 0.6, 'overall': 0.8, 'data': data}
+        response = JsonResponse(res, safe=False)
         return HttpResponse(response, content_type='application/json')
     return HttpResponse("Something wrong", content_type="text/plain")
