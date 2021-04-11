@@ -19,6 +19,11 @@ def songs(request):
 @csrf_exempt
 def upload(request):
     if request.method == 'POST':
+        # This is the starting time of the first note calculated at the front-end
+        start_time = float(request.POST['start_time'])
+        # This is the selected BPM
+        bpm = int(request.POST['bpm'])
+        print("-------------start_time received: ", start_time)
         # Store the uploaded recording at /media/audios
         handle_recording(request.FILES['recording'])
         # TODO: Please process the recording here and return in the following format:
