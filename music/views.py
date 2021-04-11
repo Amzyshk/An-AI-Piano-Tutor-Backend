@@ -35,7 +35,7 @@ def upload(request):
                 data.append(4)
             else:
                 data.append(1)
-        res = {'bpm': 120, 'speed': 80, 'note': 0.9, 'rhythm': 0.7, 'correctness': 0.6, 'overall': 0.8, 'data': data}
+        res = {'bpm': 120, 'speed': 0.8, 'note': 0.9, 'rhythm': 0.7, 'overall': 0.9, 'data': data}
         response = JsonResponse(res, safe=False)
         return HttpResponse(response, content_type='application/json')
     return HttpResponse("Something wrong", content_type="text/plain")
