@@ -4,14 +4,14 @@ import scipy
 from pydub.utils import get_array_type
 from scipy.fft import fft
 import sys
-sys.path.append("/usr/local/lib/python3.7/site-packages")
+#sys.path.append("/usr/local/lib/python3.7/site-packages")
+sys.path.append("/usr/local/lib/python3.8/site-packages")
 import essentia
 # import essentia.standard as es
 from essentia.standard import *
-from pylab import plot, show, figure, imshow
 #%matplotlib inline
-import matplotlib.pyplot as plt
-plt.rcParams['figure.figsize'] = (15, 6) # set plot sizes to something larger than default
+#import matplotlib.pyplot as plt
+#plt.rcParams['figure.figsize'] = (15, 6) # set plot sizes to something larger than default
 from pydub import AudioSegment
 
 #file = "../algo_wxm/audio/longwrongE4.m4a"
