@@ -9,4 +9,20 @@ class Song(models.Model):
     def __str__(self):
         return self.name
 
+class Frequency(models.Model):
+    note = models.CharField(max_length=200)
+    freq = models.FloatField()
+
+    def __str__(self):
+        return self.note
+
+
+class Standard(models.Model):
+    name = models.CharField(max_length=200)
+    info = models.JSONField()
+
+    def __str__(self):
+        return self.name
+
+
 

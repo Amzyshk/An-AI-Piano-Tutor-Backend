@@ -1,5 +1,6 @@
 import array
 import numpy as np
+import json
 import scipy
 from pydub.utils import get_array_type
 from scipy.fft import fft
@@ -14,9 +15,12 @@ from essentia.standard import *
 #plt.rcParams['figure.figsize'] = (15, 6) # set plot sizes to something larger than default
 from pydub import AudioSegment
 
+from music.models import Song, Frequency, Standard
+
 #file = "../algo_wxm/audio/longwrongE4.m4a"
 
 def process_music(fileName, start_time, bpm):
+    MUSIC = "Ode To Joy"
     def frequency_spectrum(sample, max_frequency=4187):
         """
         Derive frequency spectrum of a signal pydub.AudioSample
@@ -132,63 +136,69 @@ def process_music(fileName, start_time, bpm):
 
     #STANDARD OF MUSIC
 
-    c4 = 261.626
-    d4 = 293.665
-    e4 = 329.629
-    f4 = 349.228
-    g4 = 391.995
-    g3 = 195.998
-    standard_freqs = [e4,e4,f4,g4,
-            g4,f4,e4,d4,
-            c4,c4,d4,e4,
-            e4,d4,d4,
-            e4,e4,f4,g4,
-            g4,f4,e4,d4,
-            c4,c4,d4,e4,
-            d4,c4,c4,
-            d4,d4,e4,c4,
-            d4,e4,f4,e4,c4,
-            d4,e4,f4,e4,d4,
-            c4,d4,g3,
-            e4,e4,f4,g4,
-            g4,f4,e4,d4,
-            c4,c4,d4,e4,
-            d4,c4,c4]
+    # c4 = 261.626
+    # d4 = 293.665
+    # e4 = 329.629
+    # f4 = 349.228
+    # g4 = 391.995
+    # g3 = 195.998
+    # standard_freqs = [e4,e4,f4,g4,
+    #         g4,f4,e4,d4,
+    #         c4,c4,d4,e4,
+    #         e4,d4,d4,
+    #         e4,e4,f4,g4,
+    #         g4,f4,e4,d4,
+    #         c4,c4,d4,e4,
+    #         d4,c4,c4,
+    #         d4,d4,e4,c4,
+    #         d4,e4,f4,e4,c4,
+    #         d4,e4,f4,e4,d4,
+    #         c4,d4,g3,
+    #         e4,e4,f4,g4,
+    #         g4,f4,e4,d4,
+    #         c4,c4,d4,e4,
+    #         d4,c4,c4]
     #print(len(standard_freqs))
+    notes = Standard.objects.get(name=MUSIC).info["notes"]
+    standard_freqs = []
+    for note in notes:
+        standard_freqs.append(Frequency.objects.get(note=note).freq)
 
-    beat_index = [0,1,2,3,
-                4,5,6,7,
-                8,9,10,11,
-                12,13.5,14,
-                16,17,18,19,
-                20,21,22,23,
-                24,25,26,27,
-                28,29.5,30,
-                32,33,34,35,
-                36,37,37.5,38,39,
-                40,41,41.5,42,43,
-                44,45,46,
-                48,49,50,51,
-                52,53,54,55,
-                56,57,58,59,
-                60,61.5,62]
+    # beat_index = [0,1,2,3,
+    #             4,5,6,7,
+    #             8,9,10,11,
+    #             12,13.5,14,
+    #             16,17,18,19,
+    #             20,21,22,23,
+    #             24,25,26,27,
+    #             28,29.5,30,
+    #             32,33,34,35,
+    #             36,37,37.5,38,39,
+    #             40,41,41.5,42,43,
+    #             44,45,46,
+    #             48,49,50,51,
+    #             52,53,54,55,
+    #             56,57,58,59,
+    #             60,61.5,62]
+    beat_index = Standard.objects.get(name=MUSIC).info["beat_index"]
 
-    note_duration = [1, 1, 1, 1,
-                    1, 1, 1, 1, 
-                    1, 1, 1, 1,
-                    1.5, 0.5, 2,
-                    1, 1, 1, 1, 
-                    1, 1, 1, 1, 
-                    1, 1, 1, 1, 
-                    1.5, 0.5, 2,
-                    1, 1, 1, 1, 
-                    1, 0.5, 0.5, 1, 1,
-                    1, 0.5, 0.5, 1, 1,
-                    1, 1, 2, 
-                    1, 1, 1, 1, 
-                    1, 1, 1, 1,
-                    1, 1, 1, 1, 
-                    1.5, 0.5, 2]
+    note_duration = Standard.objects.get(name=MUSIC).info["note_duration"]
+    # note_duration = [1, 1, 1, 1,
+    #                 1, 1, 1, 1,
+    #                 1, 1, 1, 1,
+    #                 1.5, 0.5, 2,
+    #                 1, 1, 1, 1,
+    #                 1, 1, 1, 1,
+    #                 1, 1, 1, 1,
+    #                 1.5, 0.5, 2,
+    #                 1, 1, 1, 1,
+    #                 1, 0.5, 0.5, 1, 1,
+    #                 1, 0.5, 0.5, 1, 1,
+    #                 1, 1, 2,
+    #                 1, 1, 1, 1,
+    #                 1, 1, 1, 1,
+    #                 1, 1, 1, 1,
+    #                 1.5, 0.5, 2]
     #print(sum(note_duration))
 
     bpm = 119
@@ -229,22 +239,22 @@ def process_music(fileName, start_time, bpm):
     plt.plot(standard_onsets, standard_freqs)
     """
 
-    notes = ["E4","E4","F4","G4",
-           "G4","F4","E4","D4",
-           "C4","C4","D4","E4",
-           "E4","D4","D4",
-           "E4","E4","F4","G4",
-           "G4","F4","E4","D4",
-           "C4","C4","D4","E4",
-           "D4","C4","C4",
-           "D4","D4","E4","C4",
-           "D4","E4","F4","E4","C4",
-           "D4","E4","F4","E4","D4",
-           "C4","D4","G3",
-           "E4","E4","F4","G4",
-           "G4","F4","E4","D4",
-           "C4","C4","D4","E4",
-           "D4","C4","C4"]
+    # notes = ["E4","E4","F4","G4",
+    #        "G4","F4","E4","D4",
+    #        "C4","C4","D4","E4",
+    #        "E4","D4","D4",
+    #        "E4","E4","F4","G4",
+    #        "G4","F4","E4","D4",
+    #        "C4","C4","D4","E4",
+    #        "D4","C4","C4",
+    #        "D4","D4","E4","C4",
+    #        "D4","E4","F4","E4","C4",
+    #        "D4","E4","F4","E4","D4",
+    #        "C4","D4","G3",
+    #        "E4","E4","F4","G4",
+    #        "G4","F4","E4","D4",
+    #        "C4","C4","D4","E4",
+    #        "D4","C4","C4"]
     def pretty_print(result, total_num):
         pretty_res = ""
         for i in range(0, total_num):
