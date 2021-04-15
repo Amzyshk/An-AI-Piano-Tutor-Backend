@@ -19,8 +19,8 @@ from music.models import Song, Frequency, Standard
 
 #file = "../algo_wxm/audio/longwrongE4.m4a"
 
-def process_music(fileName, start_time, bpm):
-    MUSIC = "Ode To Joy"
+def process_music(fileName, start_time, bpm, song_name):
+    # MUSIC = "Ode To Joy"
     def frequency_spectrum(sample, max_frequency=4187):
         """
         Derive frequency spectrum of a signal pydub.AudioSample
@@ -159,7 +159,7 @@ def process_music(fileName, start_time, bpm):
     #         c4,c4,d4,e4,
     #         d4,c4,c4]
     #print(len(standard_freqs))
-    notes = Standard.objects.get(name=MUSIC).info["notes"]
+    notes = Standard.objects.get(name=song_name).info["notes"]
     standard_freqs = []
     for note in notes:
         standard_freqs.append(Frequency.objects.get(note=note).freq)
@@ -180,9 +180,9 @@ def process_music(fileName, start_time, bpm):
     #             52,53,54,55,
     #             56,57,58,59,
     #             60,61.5,62]
-    beat_index = Standard.objects.get(name=MUSIC).info["beat_index"]
+    beat_index = Standard.objects.get(name=song_name).info["beat_index"]
 
-    note_duration = Standard.objects.get(name=MUSIC).info["note_duration"]
+    note_duration = Standard.objects.get(name=song_name).info["note_duration"]
     # note_duration = [1, 1, 1, 1,
     #                 1, 1, 1, 1,
     #                 1, 1, 1, 1,
