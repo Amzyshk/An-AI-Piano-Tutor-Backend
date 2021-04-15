@@ -62,6 +62,10 @@ def process_music(file_name, start_time, bpm, song_name):
     VOLUME_RANGE = 5
     detected_onsets = filter_noise(volume, onsets_hfc, VOLUME_RANGE, LOWEST_VOLUME)
 
+    print_function_running("checking if onsets exist")
+    if len(detected_onsets) <= 2:
+        return [], {}
+
     print_function_running("detecting frequency")
     DETECT_ONSET_BEFORE = 0
     DETECT_ONSET_AFTER = 200
