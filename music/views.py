@@ -21,11 +21,11 @@ def songs(request):
 def upload(request):
     if request.method == 'POST':
         # This is the starting time of the first note calculated at the front-end
-        start_time = float(request.POST['start_time'])
+        start_time = float(request.POST.get('start_time'))
         # This is the selected BPM
-        bpm = float(request.POST['bpm'])
+        bpm = float(request.POST.get('bpm'))
         # This is the name of the song
-        song_name = request.POST['song_name']
+        song_name = request.POST.get('song_name')
         print("-------------song_name received: ", song_name)
         # Store the uploaded recording at /media/audios
         handle_recording(request.FILES['recording'])
