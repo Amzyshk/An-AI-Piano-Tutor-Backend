@@ -24,7 +24,9 @@ def upload(request):
         start_time = float(request.POST['start_time'])
         # This is the selected BPM
         bpm = float(request.POST['bpm'])
-        print("-------------start_time received: ", start_time)
+        # This is the name of the song
+        song_name = request.POST['song_name']
+        print("-------------song_name received: ", song_name)
         # Store the uploaded recording at /media/audios
         handle_recording(request.FILES['recording'])
         # TODO: Please process the recording here and return in the following format:
