@@ -4,7 +4,7 @@ from music.models import Song
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from .handle_recording import handle_recording
-from .process_music import process_music
+from .algo.process_music import process_music
 
 
 def index(request):
@@ -22,8 +22,10 @@ def upload(request):
     if request.method == 'POST':
         # This is the starting time of the first note calculated at the front-end
         start_time = float(request.POST.get('start_time'))
+        print("#"*5 + " Start Time from user request: ", start_time)
         # This is the selected BPM
         bpm = float(request.POST.get('bpm'))
+        print("#"*5 + " BPM from user request: ", bpm)
         # This is the name of the song
         song_name = request.POST.get('song_name')
         print("-------------song_name received: ", song_name)
