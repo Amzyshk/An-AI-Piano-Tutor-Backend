@@ -71,30 +71,65 @@ def get_compare_result(song_name,
         max_time = standard_t + beat_error_tol
         detected_num = len(examine_f)
         if detected_num > 1: # play more notes
+            #see whether duplicate
             max_time_diff = 0
             for n in range(1, detected_num):
                 time_diff = examine_t[n]-examine_t[n-1]
                 if time_diff>max_time_diff:
                     max_time_diff = time_diff
-            if max_time_diff <= dup_time_tol:
-                result[i] = "True"
-                correct_count += 1
-            else:
+            
+            if max_time_diff <= dup_time_tol:#regard as algorithm error, still considered as one note
+                #result[i] = "True"
+                #correct_count += 1
+                beat = False
+                note = False
+                for x in range(0, detected_num):
+                    if ((examine_t[x] >= min_time) and (examine_t[x] <= max_time)):#regard as correct beat
+                        beat = True
+                    if ((examine_f[x] >= min_freq) and (examine_f[x] <= max_freq)):#correct freq
+                        note = True
+                
+                if (beat == True) and (note == True):
+                    result[i] = "True"
+                    correct_count += 1
+                elif (beat == True) and (note == False):
+                    result[i] = "WrongFreq"
+                    freq_error_count += 1
+                elif (beat == False) and (note == True):
+                    result[i] = "WrongBeat"
+                    beat_error_count += 1
+                else:
+                    result[i] = "Wrong"
+                    freq_error_count += 1
+                    beat_error_count += 1
+
+            else:#really extra notes played
                 result[i] = "Dup"
+                #regard as beat wrong and freq wrong
                 beat_error_count += 1
+                freq_error_count += 1
+
         elif detected_num < 1: # miss the note
             result[i] = "Miss"
+            #beat wrong and freq wrong
+            beat_error_count += 1
+            freq_error_count += 1
         else:#only one note, see freq
             if ((examine_t[0] >= min_time) and (examine_t[0] <= max_time)):#regard as correct beat
                 if ((examine_f[0] >= min_freq) and (examine_f[0] <= max_freq)):#correct freq
                     result[i] = "True"
                     correct_count += 1
-                else:
+                else:#wrong freq but correct beat
                     result[i] = "WrongFreq"
                     freq_error_count += 1
-            else:
-                result[i] = "WrongBeat"
-                beat_error_count += 1
+            else:# wrong beat
+                if ((examine_f[0] >= min_freq) and (examine_f[0] <= max_freq)):#wrong beat but correct freq
+                    result[i] = "WrongBeat"
+                    beat_error_count += 1
+                else:#wrong beat and wrong freq
+                    result[i] = "Wrong"
+                    freq_error_count += 1
+                    beat_error_count += 1
 
     pretty_print_result(song_name, result, total_num)
     print("correct_count:", correct_count)

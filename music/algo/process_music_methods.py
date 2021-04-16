@@ -23,12 +23,26 @@ def convert_song_to_array(file_name, segment_ms):
     return song, volume
 
 def detect_bpm(file_name):
+    """method 1:
     features, features_frames = MusicExtractor(lowlevelStats=['mean', 'stdev'],
                                                rhythmStats=['mean', 'stdev'],
                                                tonalStats=['mean', 'stdev'])(file_name)
     print("BPM from algorithm: ", features['rhythm.bpm'])
     detected_bpm = features['rhythm.bpm']
     return detected_bpm
+    """
+    # method 2:
+    # Loading audio file
+    audio = MonoLoader(filename=file_name)()
+
+    # Compute beat positions and BPM
+    rhythm_extractor = RhythmExtractor2013(method="multifeature")
+    detected_bpm, beats, beats_confidence, _, beats_intervals = rhythm_extractor(audio)
+
+    print("BPM:", detected_bpm)
+    return detected_bpm
+    
+    
 
 def detect_onsets(file_name):
     # Loading audio file
