@@ -30,9 +30,10 @@ def upload(request):
         song_name = request.POST.get('song_name')
         print("-------------song_name received: ", song_name)
         # Store the uploaded recording at /media/audios
-        handle_recording(request.FILES['recording'])
-        # TODO: Please process the recording here and return in the following format:
+        path = handle_recording(request.FILES['recording'])
+        print("-----------------path of the recording: ", path)
         # TODO: change to recording path
+        # TODO: perhaps delete the recording after finish processing
         fileName = 'media/audios/longwrongE4.m4a'
         # note_result is array, overall_report is dictionary, for scores
         note_result, overall_report = process_music(fileName, start_time, bpm, song_name)

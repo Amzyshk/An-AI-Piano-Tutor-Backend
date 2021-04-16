@@ -7,3 +7,4 @@ def handle_recording(f):
     with open(path, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
+    return path
