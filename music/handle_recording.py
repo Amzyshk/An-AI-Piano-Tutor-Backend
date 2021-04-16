@@ -1,4 +1,9 @@
+import time
+
+
 def handle_recording(f):
-    with open('media/audios/recording.m4a', 'wb+') as destination:
+    name = str(int(time.time()))
+    path = 'media/audios/' + name + '.m4a'
+    with open(path, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
