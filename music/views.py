@@ -34,7 +34,15 @@ def upload(request):
         print("-----------------path of the recording: ", path)
         # TODO: change to recording path
         # TODO: perhaps delete the recording after finish processing
+        '''
+        for testing
+        '''
         fileName = 'media/audios/longwrongE4.m4a'
+        # fileName = '/Users/linyaya/Desktop/silent.mp3'
+        '''
+        for real recording
+        '''
+        # fileName = path
         # note_result is array, overall_report is dictionary, for scores
         note_result, overall_report = process_music(fileName, start_time, bpm, song_name)
         # TODO: an array of 0 or 1, where 0 indicates the note is correct, 1 indicates it has wrong frequency,

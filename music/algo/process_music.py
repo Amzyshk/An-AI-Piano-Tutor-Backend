@@ -49,9 +49,6 @@ def process_music(file_name, start_time, bpm, song_name):
     print_function_running("converting song to array")
     song, volume = convert_song_to_array(file_name, segment_ms=1)
 
-    print_function_running("detecting bpm")
-    detected_bpm = detect_bpm(file_name)
-
     print_function_running("detecting onset")
     audio, onsets_hfc = detect_onsets(file_name)
     # plt_hfc_onsets(audio ,onsets_hfc)
@@ -65,6 +62,9 @@ def process_music(file_name, start_time, bpm, song_name):
     print_function_running("checking if onsets exist")
     if len(detected_onsets) <= 2:
         return [], {}
+
+    print_function_running("detecting bpm")
+    detected_bpm = detect_bpm(file_name)
 
     print_function_running("detecting frequency")
     DETECT_ONSET_BEFORE = 0
