@@ -105,13 +105,20 @@ def frequency_spectrum(sample, max_frequency=4187):
 
     return freq_array, freq_magnitude
 
-def detect_frequency(song, detected_onsets, detect_onset_before, detect_onset_after):
+def detect_frequency(song, song_name, detected_onsets, bt_ms):
     detected_freqs = []
+    count = 0
+    note_duration = Standard.objects.get(name=song_name).info["note_duration"]
     for start in detected_onsets:
-        sample_from = int(start + detect_onset_before)
-        sample_to = int(start + detect_onset_after)
+        sample_from = int(start)
+        afterms = 125
+        if count < len(note_duration):
+            afterms = bt_ms*note_duration[count]
+
+        sample_to = int(start + afterms)
         segment = song[sample_from:sample_to]
         freqs, freq_magnitudes = frequency_spectrum(segment)
         #     print(freqs[np.argmax(freq_magnitudes)])
         detected_freqs.append(freqs[np.argmax(freq_magnitudes)])
+        count = count + 1
     return detected_freqs

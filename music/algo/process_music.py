@@ -67,9 +67,9 @@ def process_music(file_name, start_time, bpm, song_name):
     detected_bpm = detect_bpm(file_name)
 
     print_function_running("detecting frequency")
-    DETECT_ONSET_BEFORE = 0
-    DETECT_ONSET_AFTER = 200
-    detected_freqs = detect_frequency(song, detected_onsets, DETECT_ONSET_BEFORE, DETECT_ONSET_AFTER)
+    # DETECT_ONSET_BEFORE = 0
+    # # DETECT_ONSET_AFTER =
+    detected_freqs = detect_frequency(song, song_name, detected_onsets, get_bt_ms())
 
     '''
     get the input audio start time, and apply to standard onsets

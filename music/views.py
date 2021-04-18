@@ -39,10 +39,10 @@ def upload(request):
         '''
         fileName = 'media/audios/longwrongE4.m4a'
         # fileName = '/Users/linyaya/Desktop/silent.mp3'
+        path = fileName
         '''
         for real recording
         '''
-        # fileName = path
         # note_result is array, overall_report is dictionary, for scores
         note_result, overall_report = process_music(path, start_time, bpm, song_name)
         if not note_result and not overall_report:
