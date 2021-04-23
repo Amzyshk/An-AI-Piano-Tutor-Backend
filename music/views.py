@@ -5,7 +5,7 @@ from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from .handle_recording import handle_recording
 from .algo.process_music import process_music
-
+import time
 
 def index(request):
     return HttpResponse("Hello, world. You're at the music index.")
@@ -31,29 +31,27 @@ def upload(request):
         print("-------------song_name received: ", song_name)
         # Store the uploaded recording at /media/audios
         path = handle_recording(request.FILES['recording'])
+
+        # time.sleep(3)
         print("-----------------path of the recording: ", path)
-        # TODO: change to recording path
-        # TODO: perhaps delete the recording after finish processing
+
         '''
         for testing
         '''
-        fileName = 'media/audios/longwrongE4.m4a'
-        # fileName = '/Users/linyaya/Desktop/silent.mp3'
+        fileName = "/Users/linyaya/Downloads/demo-case3.m4a"
         path = fileName
-        '''
-        for real recording
-        '''
+
         # note_result is array, overall_report is dictionary, for scores
         note_result, overall_report = process_music(path, start_time, bpm, song_name)
+        
         if not note_result and not overall_report:
-            print("---------too quiet")
-            response = HttpResponse(status=400)
-            response['err'] = 'Too quiet'
+            res = "no sound detected"
+            response = HttpResponse(res, status=400)
             return response
 
-        # TODO: an array of 0 or 1, where 0 indicates the note is correct, 1 indicates it has wrong frequency,
-        # TODO: 2 indicates it's omitted, 3 indicates 多弹, 4 indicates it has wrong rhythm
-        # TODO: the length of the array should be the total number of notes in the piece, 62 for Ode to Joy.
+        #  an array of 0 or 1, where 0 indicates the note is correct, 1 indicates it has wrong frequency,
+        #  2 indicates it's omitted, 3 indicates 多弹, 4 indicates it has wrong rhythm, 5 "Wrong" indicates both wrong beat and wrong freq
+        #  the length of the array should be the total number of notes in the piece, 62 for Ode to Joy.
         data = []
         for i in note_result:
             if i == "True":
@@ -66,6 +64,8 @@ def upload(request):
                 data.append(3)
             elif i == "WrongBeat":
                 data.append(4)
+            elif i == "Wrong":
+                data.append(5)
             else:
                 data.append(0)
         """

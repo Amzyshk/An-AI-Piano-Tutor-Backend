@@ -1,5 +1,5 @@
 import sys
-#sys.path.append("/usr/local/lib/python3.7/site-packages")
+# sys.path.append("/usr/local/lib/python3.7/site-packages")
 sys.path.append("/usr/local/lib/python3.8/site-packages")
 import essentia
 from essentia.standard import *
@@ -12,7 +12,7 @@ from .plt_methods import plt_hfc_onsets, plt_onsets_after_breaking, plt_standard
 
 def get_audio_start_time(detected_onsets):
     # in ms
-    return detected_onsets[1]
+    return detected_onsets[0]
 
 
 def get_bpm():
@@ -43,14 +43,18 @@ def get_standard_song_info(song_name, audio_start_time):
     return standard_onsets, standard_freqs, total_num
 
 
-#file = "../algo_wxm/audio/longwrongE4.m4a"
+
 def process_music(file_name, start_time, bpm, song_name):
 
+
+    sound = AudioSegment.from_file(file_name)
+    framerate = sound.frame_rate
+
     print_function_running("converting song to array")
-    song, volume = convert_song_to_array(file_name, segment_ms=1)
+    song, volume = convert_song_to_array(file_name, framerate, segment_ms=1)
 
     print_function_running("detecting onset")
-    audio, onsets_hfc = detect_onsets(file_name)
+    audio, onsets_hfc = detect_onsets(file_name, framerate)
     # plt_hfc_onsets(audio ,onsets_hfc)
     # plt_onsets_after_breaking(volume, onsets_hfc)
 
@@ -72,9 +76,16 @@ def process_music(file_name, start_time, bpm, song_name):
     detected_freqs = detect_frequency(song, song_name, detected_onsets, get_bt_ms())
 
     '''
+    for testing
     get the input audio start time, and apply to standard onsets
     '''
     audio_start_time = get_audio_start_time(detected_onsets)
+    """
+    for actual usage
+    directly use the start_time as passed in
+    """
+    #standard_onsets, standard_freqs, total_num = get_standard_song_info(song_name, start_time)
+
     standard_onsets, standard_freqs, total_num = get_standard_song_info(song_name, audio_start_time)
     # plt_standard_detected_onsets_freqs(standard_onsets, detected_onsets, standard_freqs, detected_freqs)
 
@@ -93,14 +104,21 @@ def process_music(file_name, start_time, bpm, song_name):
                                  dup_time_tol, beat_error_tol, freq_error_tol)
 
     print_function_running("generating overall report")
+    """
+    for testing
+    """
     bpm = get_bpm()
+    """
+    for actual usage
+    comment the line above, directly use bpm as passed in 
+    """
+    
     overall_report = get_overall_result(total_num, correct_count, freq_error_count, beat_error_count, bpm, detected_bpm)
 
     return result, overall_report
                     
 
-
-
+#process_music("../../algo_wxm/audio/longwrongE4.m4a", 1, 119, "Ode To Joy")
 #STANDARD OF MUSIC
 
 # c4 = 261.626
@@ -179,12 +197,12 @@ def process_music(file_name, start_time, bpm, song_name):
 #        "C4","C4","D4","E4",
 #        "D4","C4","C4"]
 
-    """
-    detected_onsets = [-10, 0, 9, 10, 31, 42, 56, 57.5, 60, 80, 90]
-    detected_freqs = [10, 1, 2, 2, 4, 5, 6, 6, 7, 8, 10]
-    standard_onsets = [0, 10, 20, 30, 40, 55, 60, 80]
-    standard_freqs = [1, 2, 3, 4, 5, 6, 7, 8]
-    total_num = 8
-    note_duration = [1, 1, 1, 1, 1.5, 0.5, 2, 1]
-    bt_ms = 10
-    """
+"""
+detected_onsets = [-10, 0, 9, 10, 31, 42, 56, 57.5, 60, 80, 90]
+detected_freqs = [10, 1, 2, 2, 4, 5, 6, 6, 7, 8, 10]
+standard_onsets = [0, 10, 20, 30, 40, 55, 60, 80]
+standard_freqs = [1, 2, 3, 4, 5, 6, 7, 8]
+total_num = 8
+note_duration = [1, 1, 1, 1, 1.5, 0.5, 2, 1]
+bt_ms = 10
+"""
